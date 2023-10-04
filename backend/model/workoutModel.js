@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { Schema } from "mongoose"
 
 
 const workoutSchema  = new mongoose.Schema({
@@ -13,6 +13,11 @@ const workoutSchema  = new mongoose.Schema({
     load:{
         type:Number,
         required:[true,"Load is required"]
+    },
+    user_id:{
+        type:Schema.Types.ObjectId,
+        required:true,
+        ref:'User'
     }
 },{timestamps:true})
 

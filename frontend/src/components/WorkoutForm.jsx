@@ -1,23 +1,27 @@
 import React, { useState } from "react";
 import useWorkoutContext from "../hooks/useWorkoutContext";
+import useAuthContext from "../hooks/useAuthContext";
 const WorkoutForm = () => {
   const { dispatch } = useWorkoutContext();
   const [title, setTitle] = useState("");
   const [reps, setReps] = useState("");
   const [load, setLoad] = useState("");
   const [error, setError] = useState(null);
-  const [emptyFields,setEmptyFields] = useState([]);
-
+  const [emptyFields, setEmptyFields] = useState([]);
+  const { user } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!user) {
+      return;
+    }
     const workout = { title, reps, load };
     const response = await fetch("/api/workouts", {
       method: "POST",
       body: JSON.stringify(workout),
       headers: {
         "Content-Type": "application/JSON",
+        Authorization: `Bearer ${user.token}`,
       },
     });
 
@@ -46,7 +50,7 @@ const WorkoutForm = () => {
         id="title"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
-        className={emptyFields.includes('title') ? 'error' : ''}
+        className={emptyFields.includes("title") ? "error" : ""}
       />
       <label htmlFor="load">Load (in KG)</label>
       <input
@@ -55,7 +59,7 @@ const WorkoutForm = () => {
         id="load"
         onChange={(e) => setLoad(e.target.value)}
         value={load}
-        className={emptyFields.includes('load') ? 'error' : ''}
+        className={emptyFields.includes("load") ? "error" : ""}
       />
       <label htmlFor="reps">Reps</label>
       <input
@@ -64,7 +68,7 @@ const WorkoutForm = () => {
         id="reps"
         onChange={(e) => setReps(e.target.value)}
         value={reps}
-        className={emptyFields.includes('reps') ? 'error' : ''}
+        className={emptyFields.includes("reps") ? "error" : ""}
       />
       <button>submit</button>
       {error && <div className="error">{error}</div>}

@@ -2,6 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import connectDB from "./config/connectDB.js";
 import workoutRouter from "./route/workoutRoutes.js"
+import userRouter from "./route/userRoutes.js"
 dotenv.config();
 const app = express();
 connectDB();
@@ -16,6 +17,7 @@ app.use((req,res,next)=>{
 })
 
 // routes
+app.use("/api/users",userRouter);
 app.use("/api/workouts",workoutRouter);
 app.listen(process.env.PORT,()=>{
     console.log(`Server started at port ${process.env.PORT}`);
